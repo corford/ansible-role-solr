@@ -42,4 +42,3 @@
     name: "{{ solr_service_name }}"
     state: "started"
     enabled: yes
-  tags: solr
