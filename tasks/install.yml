@@ -1,0 +1,45 @@
+---
+- name: Solr | Check installation status
+  stat:
+    path: "{{ solr_install_path }}"
+
+- name: Solr | Download installation tarball
+  get_url:
+    url: "{{ solr_url }}"
+    dest: "{{ solr_workspace }}/{{ solr_url|basename }}"
+    force: no
+  register: solr_download_status
+
+- name: Solr | Extract tarball
+  unarchive:
+    src: "{{ solr_workspace }}/{{ solr_url|basename }}"
+    dest: "{{ solr_workspace }}"
+    copy: no
+  when: solr_download_status.changed
+
+- name: Solr | Ensure APT dependencies are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+    install_recommends: no
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items: "{{ solr_apt_dependencies }}"
+
+- name: Solr | Run installation script
+  shell: >
+    {{ solr_workspace }}/{{ (solr_url|basename|splitext)[0] }}/bin/install_solr_service.sh
+    {{ solr_workspace }}/{{ solr_url|basename }}
+    -i {{ solr_install_path|dirname }}
+    -d {{ solr_home }}
+    -u {{ solr_user }}
+    -s {{ solr_service_name }}
+    -p {{ solr_port }}
+    creates={{ solr_install_path }}/bin/solr
+
+- name: Solr | Enable on boot and start now
+  service:
+    name: "{{ solr_service_name }}"
+    state: "started"
+    enabled: yes
+  tags: solr

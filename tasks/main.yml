@@ -1,0 +1,9 @@
+---
+- include_tasks: install.yml
+  tags: solr
+
+- include_tasks: configure.yml
+  tags: solr
+
+- include_tasks: cleanup.yml
+  tags: solr

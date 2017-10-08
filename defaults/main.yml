@@ -1,0 +1,22 @@
+---
+solr_url: "https://archive.apache.org/dist/lucene/solr/7.0.0/solr-7.0.0.tgz"
+solr_workspace: "/usr/src" # Where tarball will be downloaded to
+
+solr_user: "solr"
+solr_install_path: "/opt/{{ solr_service_name }}"
+solr_home: "/var/{{ solr_service_name }}"
+solr_service_name: "solr"
+solr_connect_host: "localhost"
+solr_port: "8983"
+
+solr_xms: "256M"
+solr_xmx: "512M"
+solr_timezone: "UTC"
+solr_config_file: /etc/default/{{ solr_service_name }}.in.sh
+solr_cleanup_full: no # Set to yes to remove docs and examples from {{ solr_install_path }}
+
+solr_apt_dependencies:
+  - openjdk-8-jre-headless
+  - lsof
+  - acl
+  - sudo
