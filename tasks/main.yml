@@ -1,4 +1,7 @@
 ---
+- include_tasks: user.yml
+  tags: solr
+
 - include_tasks: install.yml
   tags: solr
 
