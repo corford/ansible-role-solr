@@ -6,4 +6,5 @@
   user:
     name: "{{ solr_user }}"
     group: "{{ solr_user }}"
+    home: "{{ solr_home }}"
     state: present
