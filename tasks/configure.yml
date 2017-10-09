@@ -20,3 +20,24 @@
     - regexp: "^.?SOLR_TIMEZONE="
       line: 'SOLR_TIMEZONE="{{ solr_timezone }}"'
   notify: restart solr
+
+- block:
+  - name: Solr | Ensure lib directory exists
+    file:
+      path: "{{ solr_home }}/data/lib"
+      state: directory
+      owner: "{{ solr_user }}"
+      group: "{{ solr_user }}"
+
+  - name: Solr | Copy library jars in to place
+    copy:
+      src: "{{ item }}"
+      remote_src: yes
+      dest: "{{ solr_home }}/data/lib/"
+      owner: "{{ solr_user }}"
+      group: "{{ solr_user }}"
+      mode: 0644
+    with_items: "{{ solr_extra_libs }}"
+    notify: restart solr
+
+  when: solr_extra_libs|length
